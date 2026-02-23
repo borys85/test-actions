@@ -18,3 +18,8 @@ def get_datetime():
 @app.get("/date")
 def get_date():
     return {"date": datetime.now().date().isoformat()}
+
+@app.get("/health")
+def health_check():
+    """Эндпоинт для проверки работоспособности"""
+    return {"status": "ok", "service": "time-server"}
