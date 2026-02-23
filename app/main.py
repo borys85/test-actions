@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from datetime import datetime
+from datetime import datetime, date
 
-app = FastAPI()
+app = FastAPI(title="Time Server API")
 
 @app.get("/")
 def root():
@@ -9,15 +9,18 @@ def root():
 
 @app.get("/time")
 def get_time():
+    """Возвращает текущее время UTC"""
     return {"current_time_utc": datetime.utcnow().isoformat()}
 
 @app.get("/datetime")
 def get_datetime():
+    """Возвращает текущие дату и время локального сервера"""
     return {"datetime": datetime.now().isoformat()}
 
 @app.get("/date")
 def get_date():
-    return {"date": datetime.now().date().isoformat()}
+    """Возвращает текущую дату"""
+    return {"date": date.today().isoformat()}
 
 @app.get("/health")
 def health_check():
