@@ -1,36 +1,25 @@
-# Time Server API
+## 📊 Мониторинг (Loki + Grafana)
 
-Простой FastAPI-бэкенд с автоматическим CI/CD деплоем через GitHub Actions.
+### Запуск стека мониторинга:
+bash
+cd monitoring
+docker compose up -d
 
-## 🚀 Функционал
 
-API возвращает текущее время и дату сервера в различных форматах.
+### Доступ:
+- Grafana: http://161.104.18.65:3000 (логин/пароль: анонимный доступ включён)
+- Loki API: http://161.104.18:3100
 
-### Доступные эндпоинты
+### Data Source:
+Loki подключается автоматически через provisioning. 
+Если нет — добавь вручную:
+- Name: `Loki`
+- URL: `http://loki:3100`
 
-| Метод | Эндпоинт | Описание |
-|-------|----------|----------|
-| GET | `/` | Приветственное сообщение |
-| GET | `/time` | Текущее время UTC |
-| GET | `/date` | Текущая дата (YYYY-MM-DD) |
-| GET | `/datetime` | Полные дата и время локального сервера |
-| GET | `/health` | Проверка работоспособности сервиса |
-
-## 🛠️ Технологический стек
-
-- **Backend:** FastAPI, Uvicorn
-- **Контейнеризация:** Docker
-- **CI/CD:** GitHub Actions
-- **Реестр образов:** GitHub Container Registry (GHCR)
-- **Деплой:** SSH на VPS (Ubuntu 24.04)
-
-## 📦 Быстрый старт
-
-### Локальный запуск
-
+### Тест отправки лога:
 ```bash
-# Установка зависимостей
-pip install -r requirements.txt
+curl -X POST http://localhost:3100/loki/api/v1/push \
+  -H "Content-Type: application/json" \
+  -d '{"streams":[{"stream":{"app":"time-server","level":"info"},"values":[["'$(date +%s)000000000'","Test log"]]}]}'
 
-# Запуск сервера
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+  
